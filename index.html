@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#071629">
+<meta name="description" content="Mobilefootball SA : l’application associée à la ligue Sénégalais Actif et à ses compétitions.">
+<title>Mobilefootball SA | Application officielle</title>
+<style>
+:root{--bg:#071629;--panel:#10243c;--green:#ffd43b;--yellow:#ffd43b;--red:#e53935;--gold:#ffd43b;--white:#f7f9ff;--muted:#b5c3d5}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--white);font-family:Arial,sans-serif}
+a{color:inherit}
+header{position:sticky;top:0;z-index:10;background:#091b30ee;backdrop-filter:blur(12px);border-bottom:1px solid #29435d}
+.top{max-width:1150px;margin:auto;padding:17px 20px;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.logo{font-weight:900;font-size:22px;letter-spacing:1px;display:flex;align-items:center;gap:10px}.logo img{width:48px;height:48px;object-fit:contain;border-radius:10px}.logo span{color:var(--red)}
+.logo span{color:var(--green)}
+nav{display:flex;gap:8px;flex-wrap:wrap}
+nav a{text-decoration:none;color:#dce6f4;font-size:13px;padding:9px 11px;border-radius:7px}
+nav a:hover{background:#1c3852;color:var(--green)}
+.hero{padding:75px 20px 85px;background:radial-gradient(ellipse at 80% 20%,#7b2525 0,transparent 38%),linear-gradient(135deg,#102b48,#071629 70%);text-align:center}.hero-logo{width:145px;height:145px;object-fit:contain;border-radius:24px;margin:0 auto 20px;filter:drop-shadow(0 8px 22px #0008)}
+.tag{display:inline-block;border:1px solid #27d88988;color:var(--green);padding:9px 14px;border-radius:30px;font-size:12px;letter-spacing:2px}
+.hero h1{font-size:clamp(39px,8vw,72px);line-height:1.05;margin:24px auto 17px;max-width:850px}
+.hero h1 span{color:var(--green)}
+.hero p{max-width:680px;margin:0 auto 28px;color:var(--muted);line-height:1.8;font-size:17px}
+.btn{display:inline-block;background:var(--green);color:#06182a;text-decoration:none;font-weight:800;padding:14px 21px;border-radius:8px;margin:5px}
+.btn.secondary{background:transparent;color:white;border:1px solid var(--red)}.btn:hover{background:var(--red);color:white}
+section{max-width:1120px;margin:auto;padding:65px 20px}
+.kicker{color:var(--green);font-size:12px;font-weight:bold;letter-spacing:2px}
+h2{font-size:clamp(26px,5vw,38px);margin:10px 0 15px}
+.lead{color:var(--muted);line-height:1.8;max-width:760px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:17px;margin-top:28px}
+.card{background:var(--panel);border:1px solid #29435d;border-radius:14px;padding:24px}
+.card .symbol{font-size:31px}
+.card h3{color:var(--yellow);margin:14px 0 9px}
+.card p{color:var(--muted);line-height:1.7;font-size:14px}
+.about{display:grid;grid-template-columns:1.1fr .9fr;gap:25px;align-items:center}
+.visual{min-height:280px;border:1px solid #e5393580;border-radius:18px;background:linear-gradient(145deg,#542525,#10243c);display:flex;align-items:center;justify-content:center;text-align:center;padding:25px}
+.visual strong{font-size:clamp(28px,5vw,45px);color:var(--green)}
+.visual small{display:block;color:var(--muted);margin-top:12px}
+.notice{border:1px solid #806d38;background:#292718;padding:20px;border-radius:12px;color:#f3dda0;line-height:1.7}
+.community{background:linear-gradient(120deg,#642323,#10243c);border:1px solid #e5393555;border-radius:18px;padding:30px}
+footer{background:#040d18;border-top:1px solid #24354b;text-align:center;padding:35px 20px;color:#9eafc4;font-size:13px;line-height:2}
+footer strong{color:var(--green)}
+@media(max-width:700px){.top{justify-content:center}.hero{padding:65px 18px}.about{grid-template-columns:1fr}nav{justify-content:center}}
+
+.live-select{width:100%;padding:11px;margin:12px 0;background:#071629;color:#fff;border:1px solid #49627e;border-radius:8px}
+.live-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.live-table th,.live-table td{padding:9px 6px;text-align:left;border-bottom:1px solid #29435d}
+.live-table th{color:var(--green)}
+.live-match{padding:12px 0;border-bottom:1px solid #29435d;color:var(--muted);line-height:1.6;font-size:14px}
+.live-subtitle{margin-top:22px;color:var(--yellow)}
+.live-empty{color:var(--muted);font-size:14px;line-height:1.7}
+
+
+.auth-actions{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
+.auth-actions button{border:0;border-radius:8px;padding:10px 13px;background:var(--yellow);color:#071629;font-weight:800;cursor:pointer}
+.auth-actions button:hover{background:#fff}
+.auth-actions .auth-logout{background:transparent;color:var(--white);border:1px solid var(--yellow)}
+.auth-email{font-size:12px;color:var(--muted);max-width:130px;overflow:hidden;text-overflow:ellipsis}
+.auth-overlay{position:fixed;inset:0;z-index:100;background:#000b;display:none;align-items:center;justify-content:center;padding:18px}
+.auth-overlay.open{display:flex}
+.auth-panel{width:100%;max-width:420px;background:var(--panel);border:1px solid #49627e;border-radius:16px;padding:24px;position:relative;box-shadow:0 20px 70px #0009}
+.auth-panel h2{margin:0 35px 8px 0;color:var(--yellow)}
+.auth-panel p{color:var(--muted);font-size:14px;line-height:1.6}
+.auth-close{position:absolute;right:15px;top:12px;background:transparent;border:0;color:white;font-size:27px;cursor:pointer}
+.auth-panel label{display:block;margin:14px 0 6px;font-size:13px;color:var(--white)}
+.auth-panel input{width:100%;padding:13px;border-radius:8px;border:1px solid #49627e;background:#071629;color:white;font-size:16px}
+.auth-submit{width:100%;margin-top:18px;padding:13px;border:0;border-radius:8px;background:var(--yellow);color:#071629;font-weight:900;font-size:15px;cursor:pointer}
+.auth-submit:disabled{opacity:.6;cursor:wait}
+.auth-switch{display:block;width:100%;margin-top:14px;padding:8px;border:0;background:transparent;color:var(--yellow);cursor:pointer}
+.auth-message{min-height:22px;font-size:13px;color:var(--yellow);overflow-wrap:anywhere}
+@media(max-width:700px){.top{justify-content:space-between;flex-wrap:nowrap;gap:6px}.logo{font-size:16px;gap:5px}.logo img{width:36px;height:36px}.auth-actions{width:auto;justify-content:flex-end;margin:0 0 0 auto;gap:5px}.auth-actions button{font-size:11px;padding:8px 7px}.auth-email{max-width:75px}.auth-panel{padding:20px}}
+
+</style>
+</head>
+<body>
+<header>
+<div class="top">
+<div class="logo"><img src="images/logo-mobilefootball.png" alt="Logo Mobilefootball"><div>MOBILE<span>FOOTBALL</span> SA</div></div>
+<nav>
+<a href="#accueil">Accueil</a>
+<a href="#application">Application</a>
+<a href="#fonctionnalites">Fonctionnalités</a>
+<a href="#actualites">Actualités</a>
+<a href="#reglement">Palmarès & Règlement</a>
+<a href="#administration">Administration</a>
+<a href="#telecharger">Télécharger</a>
+<a href="#contact">Contact</a>
+</nav>
+
+<div class="auth-actions" id="mobilefootball-auth">
+  <button type="button" id="auth-signup-open">S’inscrire</button>
+  <button type="button" id="auth-login-open">Se connecter</button>
+  <span class="auth-email" id="auth-email" hidden></span>
+  <button type="button" class="auth-logout" id="auth-logout" hidden>Déconnexion</button>
+</div>
+
+</div>
+</header>
+
+<main>
+<div class="hero" id="accueil">
+<img class="hero-logo" src="images/logo-mobilefootball.png" alt="Logo de l’application Mobilefootball">
+<div class="tag">DÉCOUVRE MOBILEFOOTBALL</div>
+<h1>LES COMPÉTITIONS <span>COMMENCENT ICI !</span></h1>
+<p>Bienvenue sur le site officiel de Mobilefootball SA, l’application associée à la ligue Sénégalais Actif. Suis les saisons, les matchs et les classements de nos compétitions.</p>
+<a class="btn" href="#application">Découvrir l'application</a>
+<a class="btn secondary" href="#telecharger">Téléchargement</a>
+</div>
+
+<section id="application">
+<div class="about">
+<div>
+<div class="kicker">L'APPLICATION</div>
+<h2>Bienvenue chez Mobilefootball SA</h2>
+<p class="lead">SA signifie Sénégalais Actif, le nom de notre ligue sur FC Mobile. Notre communauté est présente sur FC Mobile, TikTok et WhatsApp. Mobilefootball SA est l'application associée à notre ligue et à ses compétitions.</p>
+</div>
+<div class="visual">
+<div><strong>MOBILE<br>FOOTBALL</strong><small>L’application officielle de la ligue Sénégalais Actif</small></div>
+</div>
+</div>
+</section>
+
+<section id="fonctionnalites">
+<div class="kicker">DÉCOUVRIR</div>
+<h2>Découvrez l’univers de Mobilefootball SA</h2>
+<p class="lead">Mobilefootball SA accompagne la ligue Sénégalais Actif. Retrouve les compétitions, les résultats et les informations de notre communauté.</p>
+<div class="grid">
+<div class="card"><div class="symbol">📱</div><h3>L'application Mobilefootball</h3><p>Découvre l'application Mobilefootball SA et son rôle dans l'univers des compétitions.</p></div>
+<div class="card"><div class="symbol">⚽</div><h3>Compétitions</h3><p>Retrouve les compétitions annoncées et les informations communiquées par la communauté.</p></div>
+<div class="card"><div class="symbol">🔔</div><h3>Annonces WhatsApp</h3><p>Suis les annonces des compétitions et les informations partagées sur WhatsApp.</p></div>
+<div class="card"><div class="symbol">🤝</div><h3>Communauté</h3><p>Rejoins la communauté WhatsApp pour suivre les annonces et les actualités des compétitions.</p></div>
+</div>
+</section>
+
+<section id="actualites">
+<div class="kicker">RESTE INFORMÉ</div>
+<h2>Actualités et nouveautés</h2>
+<p class="lead">Retrouve ici les informations sportives actualisées automatiquement depuis les compétitions de l’application. Les annonces administratives seront publiées séparément.</p>
+<div class="card">
+<h3>Suivi des compétitions</h3>
+<p>Les saisons, les classements et les matchs affichés sur ce site sont récupérés directement depuis les données publiques de Mobilefootball SA.</p>
+</div>
+</section>
+
+
+<section id="competitions-live">
+<div class="kicker">DONNÉES DE L'APPLICATION</div>
+<h2>Compétitions en direct</h2>
+<p class="lead">Les saisons, classements et rencontres sont actualisés depuis Mobilefootball SA.</p>
+<div id="live-status" class="notice">Connexion aux compétitions en cours...</div>
+<div class="grid">
+<div class="card">
+<h3>⚽ FC Mobile</h3>
+<div id="fc-mobile-data">Chargement...</div>
+</div>
+<div class="card">
+<h3>🎮 eFootball</h3>
+<div id="efootball-data">Chargement...</div>
+</div>
+</div>
+</section>
+
+<section id="galerie">
+<div class="kicker">EN IMAGES</div>
+<h2>Découvre l'application</h2>
+<p class="lead">Les captures d'écran de l'application Mobilefootball SA seront présentées ici pour te faire découvrir son interface.</p>
+<div class="visual">
+<div><strong>MOBILEFOOTBALL SA</strong><small>Captures d'écran à intégrer</small></div>
+</div>
+</section>
+
+<section id="telecharger">
+<div class="kicker">INSTALLATION</div>
+<h2>Télécharger Mobilefootball SA</h2>
+<div class="notice">
+<strong>Version Android — Mobilefootball SA</strong><br>
+Télécharge bientôt l'application officielle de la ligue Sénégalais Actif (SA), présente sur FC Mobile, TikTok et WhatsApp.<br>
+Le lien officiel sera ajouté dès que le fichier APK sera prêt.
+</div>
+</section>
+
+
+
+<section id="reglement">
+<div class="kicker">LIGUE SÉNÉGALAIS ACTIF 🇸🇳</div>
+<h2>Palmarès et règlement de la ligue</h2>
+<p class="lead">Retrouvez les distinctions des joueurs et les règles à respecter dans notre communauté WhatsApp.</p>
+
+<div class="card">
+<h3>🏆 1. Palmarès de la ligue</h3>
+<div class="cards">
+
+
+
+
+
+
+
+</div>
+</div>
+
+<div class="card">
+<h3>🚫 2. Interdictions dans le groupe WhatsApp</h3>
+<ul>
+<li>Partage de liens non autorisés : ❌</li>
+<li>Insultes et manque de respect : ❌</li>
+<li>Stickers -18 ans : ❌</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>📋 3. Conditions et sanctions de la ligue</h3>
+<ul>
+<li><strong>GEN :</strong> supérieur ou égal à la moyenne exigée (GEN 120, variable). En dessous de la moyenne : renvoi à la fin de la saison.</li>
+<li><strong>Logo :</strong> retirer le logo choisi collectivement par la ligue entraîne un renvoi automatique.</li>
+<li><strong>Points d'activité :</strong> moins de 3 500 points entraîne un renvoi trois jours avant la fin de la saison.</li>
+<li><strong>Fans :</strong> moins de 500 000 fans entraîne un avertissement, puis une exclusion à la fin de la saison si le seuil n'est pas atteint.</li>
+<li><strong>Coupes :</strong> moins de 700 000 coupes entraîne une notification, puis un renvoi à la fin de la saison si le seuil n'est pas atteint.</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>⚠️ 4. Signalement des comportements déplacés</h3>
+<p>Si des insultes ou des expressions inappropriées apparaissent dans le chat de la ligue, veuillez les signaler aux administrateurs. Joignez des captures d'écran lisibles et transmettez-les en privé si nécessaire.</p>
+</div>
+
+<div class="card">
+<h3>🤝 5. Règles complémentaires proposées</h3>
+<ul>
+<li>Respecter tous les membres, les adversaires et les administrateurs.</li>
+<li>Ne pas tricher, utiliser de faux résultats ou falsifier des captures d'écran.</li>
+<li>Éviter le spam et les messages sans rapport avec la ligue.</li>
+<li>Respecter les annonces officielles et les consignes des administrateurs.</li>
+<li>En cas de contestation, fournir des preuves et contacter les administrateurs calmement en privé.</li>
+<li>Ne pas publier les informations personnelles d'un autre membre sans son autorisation.</li>
+</ul>
+</div>
+
+<p class="lead">Le respect de ce règlement contribue au bon fonctionnement de Sénégalais Actif. Les annonces et les échanges officiels de la ligue se font notamment sur WhatsApp.</p>
+</section>
+
+<section id="administration">
+<div class="kicker">NOTRE ÉQUIPE</div>
+<h2>Notre équipe administrative</h2>
+<p class="lead">Découvrez les administrateurs de la ligue Sénégalais Actif (SA).</p>
+<div class="cards">
+<div class="card"><h3>Yakarito</h3><p>Administrateur</p></div>
+<div class="card"><h3>Canzo</h3><p>Administrateur</p></div>
+<div class="card"><h3>Ndour</h3><p>Administrateur</p></div>
+<div class="card"><h3>Shino</h3><p>Administrateur</p></div>
+<div class="card"><h3>Maissa</h3><p>Administrateur</p></div>
+<div class="card"><h3>Elhaag05</h3><p>Administrateur</p></div>
+</div>
+</section>
+
+<section id="contact">
+<div class="community">
+<div class="kicker">RESTONS CONNECTÉS</div>
+<h2>Rejoins la communauté Sénégalais Actif (SA)</h2>
+<p class="lead">Suis les annonces et échange avec les autres passionnés.</p>
+<a class="btn" href="https://chat.whatsapp.com/EXWDz5C3xf396tS5lkMN0E?s=cl&p=a&iam=2" target="_blank" rel="noopener">Communauté WhatsApp</a>
+<a class="btn secondary" href="https://www.tiktok.com/@galsen_actif?_r=1&_t=ZS-9BGKgi4QBIT" target="_blank" rel="noopener">Nous suivre sur TikTok</a>
+</div>
+</section>
+</main>
+
+
+<div class="auth-overlay" id="auth-overlay" aria-hidden="true">
+  <section class="auth-panel" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+    <button type="button" class="auth-close" id="auth-close" aria-label="Fermer">×</button>
+    <h2 id="auth-title">Créer un compte</h2>
+    <p id="auth-description">Inscris-toi sur Mobilefootball SA avec ton adresse e-mail.</p>
+    <form id="auth-form">
+      <label for="auth-input-email">Adresse e-mail</label>
+      <input id="auth-input-email" type="email" autocomplete="email" required maxlength="254" placeholder="exemple@email.com">
+      <label for="auth-input-password">Mot de passe</label>
+      <input id="auth-input-password" type="password" autocomplete="new-password" required minlength="6" placeholder="6 caractères minimum">
+      <button class="auth-submit" id="auth-submit" type="submit">Créer mon compte</button>
+    </form>
+    <p class="auth-message" id="auth-message" role="status" aria-live="polite"></p>
+    <button type="button" class="auth-switch" id="auth-switch">Déjà inscrit ? Se connecter</button>
+  </section>
+</div>
+
+<footer>
+<strong>MOBILEFOOTBALL SA</strong><br>
+Site officiel de présentation de l'application Mobilefootball.<br>
+Application associée à la ligue Sénégalais Actif (SA).<br>
+© 2026 Mobilefootball SA — Tous droits réservés.
+</footer>
+
+<script>
+const SUPABASE_SITE = {"url": "https://zchhoyckvmiwolipfsfn.supabase.co", "key": "sb_publishable_p-akK9Jc-BcZB6VIy3l0OA_6bkiP0MA"};
+const escapeSite = value => String(value ?? '').replace(/[&<>"']/g, c => ({
+  '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+}[c]));
+
+async function siteRpc(name, args) {
+  const response = await fetch(
+    SUPABASE_SITE.url + '/rest/v1/rpc/' + name,
+    {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_SITE.key,
+        'Authorization': 'Bearer ' + SUPABASE_SITE.key,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(args)
+    }
+  );
+  if (!response.ok) throw new Error('Erreur API (' + response.status + ')');
+  return response.json();
+}
+
+function displayDate(value) {
+  if (!value) return 'Date à définir';
+  const d = new Date(value);
+  return isNaN(d.getTime()) ? escapeSite(value) :
+    d.toLocaleString('fr-FR', {dateStyle:'medium', timeStyle:'short'});
+}
+
+async function loadCompetition(gameType, containerId) {
+  const root = document.getElementById(containerId);
+  try {
+    const seasons = await siteRpc('site_public_seasons', {p_game_type:gameType});
+    if (!seasons.length) {
+      root.innerHTML = '<p class="live-empty">Aucune saison publiée pour le moment.</p>';
+      return;
+    }
+
+    const selectId = 'season-' + gameType;
+    root.innerHTML = `
+      <label for="${selectId}">Choisir une saison</label>
+      <select class="live-select" id="${selectId}">
+        ${seasons.map((s,i) => `<option value="${escapeSite(s.id)}">${escapeSite(s.name)}</option>`).join('')}
+      </select>
+      <div id="${selectId}-details"></div>`;
+
+    const select = document.getElementById(selectId);
+    const details = document.getElementById(selectId + '-details');
+
+    async function showSeason() {
+      details.innerHTML = '<p class="live-empty">Chargement des données...</p>';
+      const season = seasons.find(s => s.id === select.value);
+      if (!season) return;
+
+      try {
+        const [ranking, matches] = await Promise.all([
+          siteRpc('site_public_leaderboard', {
+            p_season_id:season.id, p_game_type:gameType
+          }),
+          siteRpc('site_public_matches', {
+            p_game_type:gameType, p_season_id:season.id
+          })
+        ]);
+
+        const status = season.status === 'active' ? 'En cours' :
+          season.status === 'completed' ? 'Terminée' : escapeSite(season.status);
+
+        details.innerHTML = `
+          <p class="live-empty">
+            <strong>${escapeSite(season.name)}</strong><br>
+            Statut : ${status}<br>
+            Début : ${displayDate(season.start_date)}<br>
+            Fin : ${displayDate(season.end_date)}<br>
+            Joueurs inscrits : ${Number(season.registered_players || 0)}
+          </p>
+          <h4 class="live-subtitle">🏆 Classement</h4>
+          ${ranking.length ? `
+            <table class="live-table">
+              <thead><tr><th>Rang</th><th>Joueur</th><th>Points</th><th>V.</th></tr></thead>
+              <tbody>${ranking.map(p => `
+                <tr>
+                  <td>${escapeSite(p.rank_position)}</td>
+                  <td>${escapeSite(p.in_game_name || p.username)}</td>
+                  <td>${escapeSite(p.points)}</td>
+                  <td>${escapeSite(p.wins)}</td>
+                </tr>`).join('')}
+              </tbody>
+            </table>` : '<p class="live-empty">Le classement sera disponible dès les premières performances validées.</p>'}
+          <h4 class="live-subtitle">⚽ Matchs et résultats</h4>
+          ${matches.length ? matches.map(m => `
+            <div class="live-match">
+              <strong>${escapeSite(m.player1_name)} — ${escapeSite(m.player2_name)}</strong><br>
+              ${m.player1_score != null && m.player2_score != null
+                ? escapeSite(m.player1_score) + ' - ' + escapeSite(m.player2_score)
+                : 'Résultat en attente'}<br>
+              ${displayDate(m.scheduled_at)}
+            </div>`).join('') :
+            '<p class="live-empty">Aucun match public disponible pour cette saison.</p>'}`;
+      } catch (error) {
+        details.innerHTML = '<p class="live-empty">Impossible de charger les détails de cette saison pour le moment.</p>';
+      }
+    }
+
+    select.addEventListener('change', showSeason);
+    await showSeason();
+  } catch (error) {
+    root.innerHTML = '<p class="live-empty">Données temporairement indisponibles. Réessaie plus tard.</p>';
+  }
+}
+
+(async function initMobilefootballSite() {
+  const status = document.getElementById('live-status');
+  await Promise.all([
+    loadCompetition('fc_mobile', 'fc-mobile-data'),
+    loadCompetition('efootball', 'efootball-data')
+  ]);
+  status.textContent = 'Données publiques de l’application chargées. Les informations se mettent à jour lors du chargement de la page.';
+})();
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function () {
+  const overlay = document.getElementById('auth-overlay');
+  const form = document.getElementById('auth-form');
+  const title = document.getElementById('auth-title');
+  const description = document.getElementById('auth-description');
+  const submit = document.getElementById('auth-submit');
+  const message = document.getElementById('auth-message');
+  const switchButton = document.getElementById('auth-switch');
+  const emailInput = document.getElementById('auth-input-email');
+  const passwordInput = document.getElementById('auth-input-password');
+  const signupOpen = document.getElementById('auth-signup-open');
+  const loginOpen = document.getElementById('auth-login-open');
+  const logout = document.getElementById('auth-logout');
+  const emailLabel = document.getElementById('auth-email');
+  let mode = 'signup';
+
+  if (!window.supabase || !window.supabase.createClient) {
+    message.textContent = 'Le service de connexion est momentanément indisponible.';
+    return;
+  }
+
+  const client = window.supabase.createClient(SUPABASE_SITE.url, SUPABASE_SITE.key);
+
+  function openAuth(nextMode) {
+    mode = nextMode;
+    title.textContent = mode === 'signup' ? 'Créer un compte' : 'Se connecter';
+    description.textContent = mode === 'signup'
+      ? 'Inscris-toi sur Mobilefootball SA avec ton adresse e-mail.'
+      : 'Utilise les mêmes identifiants que dans l’application Mobilefootball.';
+    submit.textContent = mode === 'signup' ? 'Créer mon compte' : 'Se connecter';
+    passwordInput.autocomplete = mode === 'signup' ? 'new-password' : 'current-password';
+    switchButton.textContent = mode === 'signup'
+      ? 'Déjà inscrit ? Se connecter'
+      : 'Pas encore de compte ? S’inscrire';
+    message.textContent = '';
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeAuth() {
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
+    message.textContent = '';
+  }
+
+  function updateAuth(session) {
+    const connected = !!session;
+    signupOpen.hidden = connected;
+    loginOpen.hidden = connected;
+    logout.hidden = !connected;
+    emailLabel.hidden = !connected;
+    emailLabel.textContent = connected ? (session.user.email || 'Connecté') : '';
+  }
+
+  signupOpen.addEventListener('click', () => openAuth('signup'));
+  loginOpen.addEventListener('click', () => openAuth('login'));
+  switchButton.addEventListener('click', () => openAuth(mode === 'signup' ? 'login' : 'signup'));
+  document.getElementById('auth-close').addEventListener('click', closeAuth);
+  overlay.addEventListener('click', event => {
+    if (event.target === overlay) closeAuth();
+  });
+
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    const email = emailInput.value.trim().toLowerCase();
+    const password = passwordInput.value;
+    if (password.length < 6) {
+      message.textContent = 'Le mot de passe doit contenir au moins 6 caractères.';
+      return;
+    }
+
+    submit.disabled = true;
+    message.textContent = 'Veuillez patienter…';
+
+    try {
+      if (mode === 'signup') {
+        const { data, error } = await client.auth.signUp({ email, password });
+        if (error) throw error;
+        if (!data.session) {
+          message.textContent = 'Compte créé ! Vérifie ta boîte e-mail pour confirmer ton inscription.';
+        } else {
+          message.textContent = 'Compte créé avec succès.';
+          closeAuth();
+        }
+      } else {
+        const { error } = await client.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        closeAuth();
+      }
+    } catch (error) {
+      message.textContent = error instanceof Error ? error.message : 'Une erreur est survenue.';
+    } finally {
+      submit.disabled = false;
+    }
+  });
+
+  logout.addEventListener('click', async () => {
+    logout.disabled = true;
+    const { error } = await client.auth.signOut();
+    logout.disabled = false;
+    if (error) alert('Déconnexion impossible : ' + error.message);
+  });
+
+  client.auth.onAuthStateChange((_event, session) => updateAuth(session));
+  client.auth.getSession().then(({ data, error }) => {
+    if (!error) updateAuth(data.session);
+  });
+})();
+</script>
+
+</body>
+</html><div class="card"><h3>RAFAEL lèão</h3><p>⭐⭐</p></div>
+<div class="card"><h3>CANZO</h3><p>⭐⭐</p></div>
+<div class="card"><h3>cheikh</h3><p>⭐⭐</p></div>
+<div class="card"><h3>Elhag</h3><p>⭐</p></div>
+<div class="card"><h3>AbdouG.221</h3><p>⭐</p></div>
+<div class="card"><h3>GOOD BOY.KM</h3><p>⭐</p></div>
+<div class="card"><h3>SHINO</h3><p>⭐</p></div>harset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#071629">
+<meta name="description" content="Mobilefootball SA : l’application associée à la ligue Sénégalais Actif et à ses compétitions.">
+<title>Mobilefootball SA | Application officielle</title>
+<style>
+:root{--bg:#071629;--panel:#10243c;--green:#ffd43b;--yellow:#ffd43b;--red:#e53935;--gold:#ffd43b;--white:#f7f9ff;--muted:#b5c3d5}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--white);font-family:Arial,sans-serif}
+a{color:inherit}
+header{position:sticky;top:0;z-index:10;background:#091b30ee;backdrop-filter:blur(12px);border-bottom:1px solid #29435d}
+.top{max-width:1150px;margin:auto;padding:17px 20px;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.logo{font-weight:900;font-size:22px;letter-spacing:1px;display:flex;align-items:center;gap:10px}.logo img{width:48px;height:48px;object-fit:contain;border-radius:10px}.logo span{color:var(--red)}
+.logo span{color:var(--green)}
+nav{display:flex;gap:8px;flex-wrap:wrap}
+nav a{text-decoration:none;color:#dce6f4;font-size:13px;padding:9px 11px;border-radius:7px}
+nav a:hover{background:#1c3852;color:var(--green)}
+.hero{padding:75px 20px 85px;background:radial-gradient(ellipse at 80% 20%,#7b2525 0,transparent 38%),linear-gradient(135deg,#102b48,#071629 70%);text-align:center}.hero-logo{width:145px;height:145px;object-fit:contain;border-radius:24px;margin:0 auto 20px;filter:drop-shadow(0 8px 22px #0008)}
+.tag{display:inline-block;border:1px solid #27d88988;color:var(--green);padding:9px 14px;border-radius:30px;font-size:12px;letter-spacing:2px}
+.hero h1{font-size:clamp(39px,8vw,72px);line-height:1.05;margin:24px auto 17px;max-width:850px}
+.hero h1 span{color:var(--green)}
+.hero p{max-width:680px;margin:0 auto 28px;color:var(--muted);line-height:1.8;font-size:17px}
+.btn{display:inline-block;background:var(--green);color:#06182a;text-decoration:none;font-weight:800;padding:14px 21px;border-radius:8px;margin:5px}
+.btn.secondary{background:transparent;color:white;border:1px solid var(--red)}.btn:hover{background:var(--red);color:white}
+section{max-width:1120px;margin:auto;padding:65px 20px}
+.kicker{color:var(--green);font-size:12px;font-weight:bold;letter-spacing:2px}
+h2{font-size:clamp(26px,5vw,38px);margin:10px 0 15px}
+.lead{color:var(--muted);line-height:1.8;max-width:760px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:17px;margin-top:28px}
+.card{background:var(--panel);border:1px solid #29435d;border-radius:14px;padding:24px}
+.card .symbol{font-size:31px}
+.card h3{color:var(--yellow);margin:14px 0 9px}
+.card p{color:var(--muted);line-height:1.7;font-size:14px}
+.about{display:grid;grid-template-columns:1.1fr .9fr;gap:25px;align-items:center}
+.visual{min-height:280px;border:1px solid #e5393580;border-radius:18px;background:linear-gradient(145deg,#542525,#10243c);display:flex;align-items:center;justify-content:center;text-align:center;padding:25px}
+.visual strong{font-size:clamp(28px,5vw,45px);color:var(--green)}
+.visual small{display:block;color:var(--muted);margin-top:12px}
+.notice{border:1px solid #806d38;background:#292718;padding:20px;border-radius:12px;color:#f3dda0;line-height:1.7}
+.community{background:linear-gradient(120deg,#642323,#10243c);border:1px solid #e5393555;border-radius:18px;padding:30px}
+footer{background:#040d18;border-top:1px solid #24354b;text-align:center;padding:35px 20px;color:#9eafc4;font-size:13px;line-height:2}
+footer strong{color:var(--green)}
+@media(max-width:700px){.top{justify-content:center}.hero{padding:65px 18px}.about{grid-template-columns:1fr}nav{justify-content:center}}
+
+.live-select{width:100%;padding:11px;margin:12px 0;background:#071629;color:#fff;border:1px solid #49627e;border-radius:8px}
+.live-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+.live-table th,.live-table td{padding:9px 6px;text-align:left;border-bottom:1px solid #29435d}
+.live-table th{color:var(--green)}
+.live-match{padding:12px 0;border-bottom:1px solid #29435d;color:var(--muted);line-height:1.6;font-size:14px}
+.live-subtitle{margin-top:22px;color:var(--yellow)}
+.live-empty{color:var(--muted);font-size:14px;line-height:1.7}
+
+</style>
+</head>
+<body>
+<header>
+<div class="top">
+<div class="logo"><img src="images/logo-mobilefootball.png" alt="Logo Mobilefootball"><div>MOBILE<span>FOOTBALL</span> SA</div></div>
+<nav>
+<a href="#accueil">Accueil</a>
+<a href="#application">Application</a>
+<a href="#fonctionnalites">Fonctionnalités</a>
+<a href="#actualites">Actualités</a>
+<a href="#reglement">Palmarès & Règlement</a>
+<a href="#administration">Administration</a>
+<a href="#telecharger">Télécharger</a>
+<a href="#contact">Contact</a>
+</nav>
+</div>
+</header>
+
+<main>
+<div class="hero" id="accueil">
+<img class="hero-logo" src="images/logo-mobilefootball.png" alt="Logo de l’application Mobilefootball">
+<div class="tag">DÉCOUVRE MOBILEFOOTBALL</div>
+<h1>LES COMPÉTITIONS <span>COMMENCENT ICI !</span></h1>
+<p>Bienvenue sur le site officiel de Mobilefootball SA, l’application associée à la ligue Sénégalais Actif. Suis les saisons, les matchs et les classements de nos compétitions.</p>
+<a class="btn" href="#application">Découvrir l'application</a>
+<a class="btn secondary" href="#telecharger">Téléchargement</a>
+</div>
+
+<section id="application">
+<div class="about">
+<div>
+<div class="kicker">L'APPLICATION</div>
+<h2>Bienvenue chez Mobilefootball SA</h2>
+<p class="lead">SA signifie Sénégalais Actif, le nom de notre ligue sur FC Mobile. Notre communauté est présente sur FC Mobile, TikTok et WhatsApp. Mobilefootball SA est l'application associée à notre ligue et à ses compétitions.</p>
+</div>
+<div class="visual">
+<div><strong>MOBILE<br>FOOTBALL</strong><small>L’application officielle de la ligue Sénégalais Actif</small></div>
+</div>
+</div>
+</section>
+
+<section id="fonctionnalites">
+<div class="kicker">DÉCOUVRIR</div>
+<h2>Découvrez l’univers de Mobilefootball SA</h2>
+<p class="lead">Mobilefootball SA accompagne la ligue Sénégalais Actif. Retrouve les compétitions, les résultats et les informations de notre communauté.</p>
+<div class="grid">
+<div class="card"><div class="symbol">📱</div><h3>L'application Mobilefootball</h3><p>Découvre l'application Mobilefootball SA et son rôle dans l'univers des compétitions.</p></div>
+<div class="card"><div class="symbol">⚽</div><h3>Compétitions</h3><p>Retrouve les compétitions annoncées et les informations communiquées par la communauté.</p></div>
+<div class="card"><div class="symbol">🔔</div><h3>Annonces WhatsApp</h3><p>Suis les annonces des compétitions et les informations partagées sur WhatsApp.</p></div>
+<div class="card"><div class="symbol">🤝</div><h3>Communauté</h3><p>Rejoins la communauté WhatsApp pour suivre les annonces et les actualités des compétitions.</p></div>
+</div>
+</section>
+
+<section id="actualites">
+<div class="kicker">RESTE INFORMÉ</div>
+<h2>Actualités et nouveautés</h2>
+<p class="lead">Retrouve ici les informations sportives actualisées automatiquement depuis les compétitions de l’application. Les annonces administratives seront publiées séparément.</p>
+<div class="card">
+<h3>Suivi des compétitions</h3>
+<p>Les saisons, les classements et les matchs affichés sur ce site sont récupérés directement depuis les données publiques de Mobilefootball SA.</p>
+</div>
+</section>
+
+
+<section id="competitions-live">
+<div class="kicker">DONNÉES DE L'APPLICATION</div>
+<h2>Compétitions en direct</h2>
+<p class="lead">Les saisons, classements et rencontres sont actualisés depuis Mobilefootball SA.</p>
+<div id="live-status" class="notice">Connexion aux compétitions en cours...</div>
+<div class="grid">
+<div class="card">
+<h3>⚽ FC Mobile</h3>
+<div id="fc-mobile-data">Chargement...</div>
+</div>
+<div class="card">
+<h3>🎮 eFootball</h3>
+<div id="efootball-data">Chargement...</div>
+</div>
+</div>
+</section>
+
+<section id="galerie">
+<div class="kicker">EN IMAGES</div>
+<h2>Découvre l'application</h2>
+<p class="lead">Les captures d'écran de l'application Mobilefootball SA seront présentées ici pour te faire découvrir son interface.</p>
+<div class="visual">
+<div><strong>MOBILEFOOTBALL SA</strong><small>Captures d'écran à intégrer</small></div>
+</div>
+</section>
+
+<section id="telecharger">
+<div class="kicker">INSTALLATION</div>
+<h2>Télécharger Mobilefootball SA</h2>
+<div class="notice">
+<strong>Version Android — Mobilefootball SA</strong><br>
+Télécharge bientôt l'application officielle de la ligue Sénégalais Actif (SA), présente sur FC Mobile, TikTok et WhatsApp.<br>
+Le lien officiel sera ajouté dès que le fichier APK sera prêt.
+</div>
+</section>
+
+
+
+<section id="reglement">
+<div class="kicker">LIGUE SÉNÉGALAIS ACTIF 🇸🇳</div>
+<h2>Palmarès et règlement de la ligue</h2>
+<p class="lead">Retrouvez les distinctions des joueurs et les règles à respecter dans notre communauté WhatsApp.</p>
+
+<div class="card">
+<h3>🏆 1. Palmarès de la ligue</h3>
+<div class="cards">
+
+
+
+
+
+
+
+</div>
+</div>
+
+<div class="card">
+<h3>🚫 2. Interdictions dans le groupe WhatsApp</h3>
+<ul>
+<li>Partage de liens non autorisés : ❌</li>
+<li>Insultes et manque de respect : ❌</li>
+<li>Stickers ou contenus pornographiques : ❌</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>📋 3. Conditions et sanctions de la ligue</h3>
+<ul>
+<li><strong>GEN :</strong> supérieur ou égal à la moyenne exigée (GEN 120, variable). En dessous de la moyenne : renvoi à la fin de la saison.</li>
+<li><strong>Logo :</strong> retirer le logo choisi collectivement par la ligue entraîne un renvoi automatique.</li>
+<li><strong>Points d'activité :</strong> moins de 3 500 points entraîne un renvoi trois jours avant la fin de la saison.</li>
+<li><strong>Fans :</strong> moins de 500 000 fans entraîne un avertissement, puis une exclusion à la fin de la saison si le seuil n'est pas atteint.</li>
+<li><strong>Coupes :</strong> moins de 700 000 coupes entraîne une notification, puis un renvoi à la fin de la saison si le seuil n'est pas atteint.</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>⚠️ 4. Signalement des comportements déplacés</h3>
+<p>Si des insultes ou des expressions inappropriées apparaissent dans le chat de la ligue, veuillez les signaler aux administrateurs. Joignez des captures d'écran lisibles et transmettez-les en privé si nécessaire.</p>
+</div>
+
+<div class="card">
+<h3>🤝 5. Règles complémentaires proposées</h3>
+<ul>
+<li>Respecter tous les membres, les adversaires et les administrateurs.</li>
+<li>Ne pas tricher, utiliser de faux résultats ou falsifier des captures d'écran.</li>
+<li>Éviter le spam et les messages sans rapport avec la ligue.</li>
+<li>Respecter les annonces officielles et les consignes des administrateurs.</li>
+<li>En cas de contestation, fournir des preuves et contacter les administrateurs calmement en privé.</li>
+<li>Ne pas publier les informations personnelles d'un autre membre sans son autorisation.</li>
+</ul>
+</div>
+
+<p class="lead">Le respect de ce règlement contribue au bon fonctionnement de Sénégalais Actif. Les annonces et les échanges officiels de la ligue se font notamment sur WhatsApp.</p>
+</section>
+
+<section id="administration">
+<div class="kicker">NOTRE ÉQUIPE</div>
+<h2>Notre équipe administrative</h2>
+<p class="lead">Découvrez les administrateurs de la ligue Sénégalais Actif (SA).</p>
+<div class="cards">
+<div class="card"><h3>Yakarito</h3><p>Administrateur</p></div>
+<div class="card"><h3>Canzo</h3><p>Administrateur</p></div>
+<div class="card"><h3>Ndour</h3><p>Administrateur</p></div>
+<div class="card"><h3>Shino</h3><p>Administrateur</p></div>
+<div class="card"><h3>Maissa</h3><p>Administrateur</p></div>
+<div class="card"><h3>Elhaag05</h3><p>Administrateur</p></div>
+</div>
+</section>
+
+<section id="contact">
+<div class="community">
+<div class="kicker">RESTONS CONNECTÉS</div>
+<h2>Rejoins la communauté Sénégalais Actif (SA)</h2>
+<p class="lead">Suis les annonces et échange avec les autres passionnés.</p>
+<a class="btn" href="https://chat.whatsapp.com/EXWDz5C3xf396tS5lkMN0E?s=cl&p=a&iam=2" target="_blank" rel="noopener">Communauté WhatsApp</a>
+<a class="btn secondary" href="https://www.tiktok.com/@galsen_actif?_r=1&_t=ZS-9BGKgi4QBIT" target="_blank" rel="noopener">Nous suivre sur TikTok</a>
+</div>
+</section>
+</main>
+
+<footer>
+<strong>MOBILEFOOTBALL SA</strong><br>
+Site officiel de présentation de l'application Mobilefootball.<br>
+Application associée à la ligue Sénégalais Actif (SA).<br>
+© 2026 Mobilefootball SA — Tous droits réservés.
+</footer>
+
+<script>
+const SUPABASE_SITE = {"url": "https://zchhoyckvmiwolipfsfn.supabase.co", "key": "sb_publishable_p-akK9Jc-BcZB6VIy3l0OA_6bkiP0MA"};
+const escapeSite = value => String(value ?? '').replace(/[&<>"']/g, c => ({
+  '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+}[c]));
+
+async function siteRpc(name, args) {
+  const response = await fetch(
+    SUPABASE_SITE.url + '/rest/v1/rpc/' + name,
+    {
+      method: 'POST',
+      headers: {
+        'apikey': SUPABASE_SITE.key,
+        'Authorization': 'Bearer ' + SUPABASE_SITE.key,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(args)
+    }
+  );
+  if (!response.ok) throw new Error('Erreur API (' + response.status + ')');
+  return response.json();
+}
+
+function displayDate(value) {
+  if (!value) return 'Date à définir';
+  const d = new Date(value);
+  return isNaN(d.getTime()) ? escapeSite(value) :
+    d.toLocaleString('fr-FR', {dateStyle:'medium', timeStyle:'short'});
+}
+
+async function loadCompetition(gameType, containerId) {
+  const root = document.getElementById(containerId);
+  try {
+    const seasons = await siteRpc('site_public_seasons', {p_game_type:gameType});
+    if (!seasons.length) {
+      root.innerHTML = '<p class="live-empty">Aucune saison publiée pour le moment.</p>';
+      return;
+    }
+
+    const selectId = 'season-' + gameType;
+    root.innerHTML = `
+      <label for="${selectId}">Choisir une saison</label>
+      <select class="live-select" id="${selectId}">
+        ${seasons.map((s,i) => `<option value="${escapeSite(s.id)}">${escapeSite(s.name)}</option>`).join('')}
+      </select>
+      <div id="${selectId}-details"></div>`;
+
+    const select = document.getElementById(selectId);
+    const details = document.getElementById(selectId + '-details');
+
+    async function showSeason() {
+      details.innerHTML = '<p class="live-empty">Chargement des données...</p>';
+      const season = seasons.find(s => s.id === select.value);
+      if (!season) return;
+
+      try {
+        const [ranking, matches] = await Promise.all([
+          siteRpc('site_public_leaderboard', {
+            p_season_id:season.id, p_game_type:gameType
+          }),
+          siteRpc('site_public_matches', {
+            p_game_type:gameType, p_season_id:season.id
+          })
+        ]);
+
+        const status = season.status === 'active' ? 'En cours' :
+          season.status === 'completed' ? 'Terminée' : escapeSite(season.status);
+
+        details.innerHTML = `
+          <p class="live-empty">
+            <strong>${escapeSite(season.name)}</strong><br>
+            Statut : ${status}<br>
+            Début : ${displayDate(season.start_date)}<br>
+            Fin : ${displayDate(season.end_date)}<br>
+            Joueurs inscrits : ${Number(season.registered_players || 0)}
+          </p>
+          <h4 class="live-subtitle">🏆 Classement</h4>
+          ${ranking.length ? `
+            <table class="live-table">
+              <thead><tr><th>Rang</th><th>Joueur</th><th>Points</th><th>V.</th></tr></thead>
+              <tbody>${ranking.map(p => `
+                <tr>
+                  <td>${escapeSite(p.rank_position)}</td>
+                  <td>${escapeSite(p.in_game_name || p.username)}</td>
+                  <td>${escapeSite(p.points)}</td>
+                  <td>${escapeSite(p.wins)}</td>
+                </tr>`).join('')}
+              </tbody>
+            </table>` : '<p class="live-empty">Le classement sera disponible dès les premières performances validées.</p>'}
+          <h4 class="live-subtitle">⚽ Matchs et résultats</h4>
+          ${matches.length ? matches.map(m => `
+            <div class="live-match">
+              <strong>${escapeSite(m.player1_name)} — ${escapeSite(m.player2_name)}</strong><br>
+              ${m.player1_score != null && m.player2_score != null
+                ? escapeSite(m.player1_score) + ' - ' + escapeSite(m.player2_score)
+                : 'Résultat en attente'}<br>
+              ${displayDate(m.scheduled_at)}
+            </div>`).join('') :
+            '<p class="live-empty">Aucun match public disponible pour cette saison.</p>'}`;
+      } catch (error) {
+        details.innerHTML = '<p class="live-empty">Impossible de charger les détails de cette saison pour le moment.</p>';
+      }
+    }
+
+    select.addEventListener('change', showSeason);
+    await showSeason();
+  } catch (error) {
+    root.innerHTML = '<p class="live-empty">Données temporairement indisponibles. Réessaie plus tard.</p>';
+  }
+}
+
+(async function initMobilefootballSite() {
+  const status = document.getElementById('live-status');
+  await Promise.all([
+    loadCompetition('fc_mobile', 'fc-mobile-data'),
+    loadCompetition('efootball', 'efootball-data')
+  ]);
+  status.textContent = 'Données publiques de l’application chargées. Les informations se mettent à jour lors du chargement de la page.';
+})();
+</script>
+
+</body>
+</html>
