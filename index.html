@@ -400,7 +400,7 @@ async function loadCompetition(gameType, containerId) {
     }
 
     select.addEventListener('change', showSeason);
-    await showSeason();
+    return await showSeason();
   } catch (error) {
     root.innerHTML = '<p class="live-empty">Données temporairement indisponibles. Réessaie plus tard.</p>';
     return false;
